@@ -1,6 +1,6 @@
 # GrandCentral::DevTools
 
-Client-side developer tools for the [`grand_central`gem`](https://github.com/clearwater-rb/grand_central).
+Client-side developer tools for the [`grand_central` gem](https://github.com/clearwater-rb/grand_central).
 
 ## Installation
 
