@@ -211,7 +211,7 @@ module GrandCentral
           table([
             tbody(attributes.map { |attr, value|
               tr({ key: attr, style: { vertical_align: :top } }, [
-                th(attr),
+                th({ style: { text_align: :right, margin_right: '1em' } }, attr),
                 td(serialize_value value),
               ])
             }),
