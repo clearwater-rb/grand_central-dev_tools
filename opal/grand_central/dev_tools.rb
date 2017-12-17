@@ -135,6 +135,8 @@ module GrandCentral
           ArrayPresenter.memoize value
         when Hash
           HashPresenter.memoize value
+        when Set
+          SetPresenter.memoize value
         else
           ModelPresenter.memoize value
         end
@@ -252,6 +254,21 @@ module GrandCentral
             })
           end,
           '}',
+        ])
+      end
+    end
+
+    class SetPresenter < Presenter
+      def render
+        div({ style: { display: 'inline-block' } }, [
+          'Set[',
+          button({ onclick: set(:show_contents, !@show_contents) }, @show_contents ? '-' : "#{model.count} items"),
+          if @show_contents
+            div({ style: { padding_left: '1em' } }, [
+              model.map { |item| div(serialize_value(item)) },
+            ])
+          end,
+          ']',
         ])
       end
     end
