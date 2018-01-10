@@ -221,19 +221,81 @@ module GrandCentral
     end
 
     class ArrayPresenter < Presenter
+      SEGMENT_SIZE = 100
+
       alias array model
 
       def render
         div({ style: { display: 'inline-block' } }, [
           '[',
-          button({ onclick: set(:show_contents, !@show_contents) }, @show_contents ? '-' : "#{array.count} items"),
+          button({ onclick: set(:show_contents, !@show_contents) }, [
+            @show_contents ? '-' : "#{array.count} items",
+          ]),
+
           if @show_contents
             div({ style: { padding_left: '1em' } }, [
-              array.map { |item| div(serialize_value(item)) },
+              if array.size > SEGMENT_SIZE
+                segments
+              else
+                array.map { |item| div(serialize_value(item)) }
+              end
             ])
           end,
+
           ']',
         ])
+      end
+
+      def segments
+        array.each_slice(SEGMENT_SIZE).map.with_index do |slice, index|
+          start = SEGMENT_SIZE * index
+          finish = start + slice.size
+          Segment.memoize(slice, self, start...finish, open: index.zero? && slice.size < SEGMENT_SIZE)
+        end
+      end
+
+      class Segment < Presenter
+        attr_reader :segment
+
+        def initialize segment, presenter, range, open: false
+          update segment, presenter, range
+          @open = open
+        end
+
+        def update segment, presenter, range
+          return unless segment
+
+          @segment = segment
+          @presenter = presenter
+          @range = range
+        end
+
+        def render
+          `console.log('render', self)`
+          div([
+            if open?
+              [
+                button({ onclick: set { @open = false } }, '-'),
+                segment.map do |item|
+                  div(serialize_value(item))
+                end
+              ]
+            else
+              button({ onclick: set { @open = true } }, @range.inspect)
+            end
+          ])
+        end
+
+        def open?
+          @open
+        end
+
+        def set
+          proc do
+            yield
+            update_self
+          end
+        end
       end
     end
 
