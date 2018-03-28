@@ -271,7 +271,6 @@ module GrandCentral
         end
 
         def render
-          `console.log('render', self)`
           div([
             if open?
               [
