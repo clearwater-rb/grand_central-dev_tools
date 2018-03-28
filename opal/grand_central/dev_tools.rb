@@ -129,7 +129,7 @@ module GrandCentral
 
       def serialize_value value
         case value
-        when String, Numeric, true, false, nil
+        when String, Numeric, true, false, nil, Time, Date
           code(value.inspect)
         when Array 
           ArrayPresenter.memoize value
