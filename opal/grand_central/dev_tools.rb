@@ -129,6 +129,8 @@ module GrandCentral
 
       def serialize_value value
         case value
+        when NativeValue
+          `value.toString()`
         when String, Numeric, true, false, nil, Time, Date
           code(value.inspect)
         when Array 
@@ -146,6 +148,12 @@ module GrandCentral
         proc do
           `self[ivar] = value`
           update_self model
+        end
+      end
+
+      module NativeValue
+        def self.=== value
+          `!(value && value.$$class)`
         end
       end
 
