@@ -37,6 +37,7 @@ module GrandCentral
           overflow: :scroll,
           box_sizing: 'border-box',
           max_height: '100vh',
+          max_width: '100vw',
         },
       }, [
         if @open
